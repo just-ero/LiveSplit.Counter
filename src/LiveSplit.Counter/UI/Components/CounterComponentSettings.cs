@@ -22,7 +22,7 @@ namespace LiveSplit.UI.Components
 
             // Set default values.
             GlobalHotkeysEnabled = false;
-            CounterFont = new Font("Segoe UI", 13, FontStyle.Regular, GraphicsUnit.Pixel);
+            CounterFont = new Font("Segoe UI", 16, FontStyle.Regular, GraphicsUnit.Pixel);
             OverrideCounterFont = false;
             CounterTextColor = Color.FromArgb(255, 255, 255, 255);
             CounterValueColor = Color.FromArgb(255, 255, 255, 255);
@@ -308,7 +308,7 @@ namespace LiveSplit.UI.Components
 
         private void btnFont_Click(object sender, EventArgs e)
         {
-            var dialog = SettingsHelper.GetFontDialog(CounterFont, 7, 20);
+            var dialog = SettingsHelper.GetFontDialog(CounterFont, 11, 26);
             dialog.FontChanged += (s, ev) => CounterFont = ((CustomFontDialog.FontChangedEventArgs)ev).NewFont;
             dialog.ShowDialog(this);
             lblFont.Text = CounterFontString;
