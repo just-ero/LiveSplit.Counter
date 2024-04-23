@@ -1,14 +1,10 @@
-﻿using LiveSplit.Options;
-using System;
+﻿using System;
 using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+
 using LiveSplit.Model.Input;
-using System.Threading;
+using LiveSplit.Options;
 
 namespace LiveSplit.UI.Components
 {
@@ -72,14 +68,14 @@ namespace LiveSplit.UI.Components
         public Color CounterValueColor { get; set; }
         public bool OverrideTextColor { get; set; }
 
-        public string CounterFontString { get { return String.Format("{0} {1}", CounterFont.FontFamily.Name, CounterFont.Style); } }
+        public string CounterFontString { get { return string.Format("{0} {1}", CounterFont.FontFamily.Name, CounterFont.Style); } }
         public Font CounterFont { get; set; }
         public bool OverrideCounterFont { get; set; }
 
         public Color BackgroundColor { get; set; }
         public Color BackgroundColor2 { get; set; }
         public GradientType BackgroundGradient { get; set; }
-        public String GradientString
+        public string GradientString
         {
             get { return BackgroundGradient.ToString(); }
             set { BackgroundGradient = (GradientType)Enum.Parse(typeof(GradientType), value); }
@@ -167,13 +163,13 @@ namespace LiveSplit.UI.Components
             EventHandlerT<GamepadButton> gamepadButtonPressed = null;
 
             // Remove Input handlers.
-            Action unregisterEvents = () =>
+            void unregisterEvents()
             {
                 txtBox.KeyDown -= handlerDown;
                 txtBox.KeyUp -= handlerUp;
                 txtBox.Leave -= leaveHandler;
                 Hook.AnyGamepadButtonPressed -= gamepadButtonPressed;
-            };
+            }
 
             // Handler for KeyDown
             handlerDown = (s, x) =>
@@ -182,7 +178,9 @@ namespace LiveSplit.UI.Components
 
                 // No action for special keys.
                 if (x.KeyCode == Keys.ControlKey || x.KeyCode == Keys.ShiftKey || x.KeyCode == Keys.Menu)
+                {
                     return;
+                }
 
                 keySetCallback(keyOrButton);
                 unregisterEvents();
@@ -204,7 +202,9 @@ namespace LiveSplit.UI.Components
 
                 // No action for normal keys.
                 if (x.KeyCode != Keys.ControlKey && x.KeyCode != Keys.ShiftKey && x.KeyCode != Keys.Menu)
+                {
                     return;
+                }
 
                 keySetCallback(keyOrButton);
                 unregisterEvents();
@@ -237,9 +237,13 @@ namespace LiveSplit.UI.Components
 
                 // May not be in the UI thread (likely).
                 if (InvokeRequired)
+                {
                     Invoke(keyOrButton);
+                }
                 else
+                {
                     keyOrButton();
+                }
             };
 
             txtBox.KeyDown += handlerDown;
@@ -284,14 +288,20 @@ namespace LiveSplit.UI.Components
         private string FormatKey(KeyOrButton key)
         {
             if (key == null)
+            {
                 return "None";
+            }
+
             string str = key.ToString();
             if (key.IsButton)
             {
                 int length = str.LastIndexOf(' ');
                 if (length != -1)
+                {
                     str = str.Substring(0, length);
+                }
             }
+
             return str;
         }
 
@@ -319,16 +329,17 @@ namespace LiveSplit.UI.Components
             label3.Enabled = btnColor.Enabled = label5.Enabled = btnColor3.Enabled = chkColor.Checked;
         }
 
-        void chkFont_CheckedChanged(object sender, EventArgs e)
+        private void chkFont_CheckedChanged(object sender, EventArgs e)
         {
             label1.Enabled = lblFont.Enabled = btnFont.Enabled = chkFont.Checked;
         }
-        void chkGlobalHotKeys_CheckedChanged(object sender, EventArgs e)
+
+        private void chkGlobalHotKeys_CheckedChanged(object sender, EventArgs e)
         {
             GlobalHotkeysEnabled = chkGlobalHotKeys.Checked;
         }
 
-        void cmbGradientType_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbGradientType_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnColor1.Visible = cmbGradientType.SelectedItem.ToString() != "Plain";
             btnColor2.DataBindings.Clear();
@@ -348,7 +359,7 @@ namespace LiveSplit.UI.Components
 
         private void txtDecrement_Enter(object sender, EventArgs e)
         {
-            SetHotkeyHandlers((TextBox)sender,  x => DecrementKey = x);
+            SetHotkeyHandlers((TextBox)sender, x => DecrementKey = x);
         }
 
         private void txtDecrement_KeyDown(object sender, KeyEventArgs e)

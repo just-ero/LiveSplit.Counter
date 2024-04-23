@@ -1,11 +1,12 @@
-﻿using LiveSplit.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
-using LiveSplit.Model.Input;
 using System.Linq;
+using System.Windows.Forms;
+
+using LiveSplit.Model;
+using LiveSplit.Model.Input;
 
 namespace LiveSplit.UI.Components
 {
@@ -35,12 +36,12 @@ namespace LiveSplit.UI.Components
 
         public float MinimumHeight { get; set; }
 
-        public float MinimumWidth 
-        { 
+        public float MinimumWidth
+        {
             get
             {
                 return CounterNameLabel.X + CounterValueLabel.ActualWidth;
-            } 
+            }
         }
 
         public float HorizontalWidth { get; set; }
@@ -66,8 +67,8 @@ namespace LiveSplit.UI.Components
         {
             // Set Background colour.
             if (Settings.BackgroundColor.A > 0
-                || Settings.BackgroundGradient != GradientType.Plain
-                && Settings.BackgroundColor2.A > 0)
+                || (Settings.BackgroundGradient != GradientType.Plain
+                && Settings.BackgroundColor2.A > 0))
             {
                 var gradientBrush = new LinearGradientBrush(
                             new PointF(0, 0),
@@ -90,19 +91,19 @@ namespace LiveSplit.UI.Components
             VerticalHeight = 1.2f * textHeight;
             MinimumHeight = MinimumHeight;
 
-            PaddingTop = Math.Max(0, ((VerticalHeight - 0.75f * textHeight) / 2f));
+            PaddingTop = Math.Max(0, (VerticalHeight - (0.75f * textHeight)) / 2f);
             PaddingBottom = PaddingTop;
 
             // Assume most users won't count past four digits (will cause a layout resize in Horizontal Mode).
             float fourCharWidth = g.MeasureString("1000", CounterFont).Width;
-            HorizontalWidth = CounterNameLabel.X + CounterNameLabel.ActualWidth + (fourCharWidth > CounterValueLabel.ActualWidth ? fourCharWidth : CounterValueLabel.ActualWidth) + 5; 
+            HorizontalWidth = CounterNameLabel.X + CounterNameLabel.ActualWidth + (fourCharWidth > CounterValueLabel.ActualWidth ? fourCharWidth : CounterValueLabel.ActualWidth) + 5;
 
             // Set Counter Name Label
             CounterNameLabel.HorizontalAlignment = mode == LayoutMode.Horizontal ? StringAlignment.Near : StringAlignment.Near;
             CounterNameLabel.VerticalAlignment = StringAlignment.Center;
             CounterNameLabel.X = 5;
             CounterNameLabel.Y = 0;
-            CounterNameLabel.Width = (width - fourCharWidth - 5);
+            CounterNameLabel.Width = width - fourCharWidth - 5;
             CounterNameLabel.Height = height;
             CounterNameLabel.Font = CounterFont;
             CounterNameLabel.Brush = new SolidBrush(Settings.OverrideTextColor ? Settings.CounterTextColor : state.LayoutSettings.TextColor);
@@ -116,7 +117,7 @@ namespace LiveSplit.UI.Components
             CounterValueLabel.VerticalAlignment = StringAlignment.Center;
             CounterValueLabel.X = 5;
             CounterValueLabel.Y = 0;
-            CounterValueLabel.Width = (width - 10);
+            CounterValueLabel.Width = width - 10;
             CounterValueLabel.Height = height;
             CounterValueLabel.Font = CounterFont;
             CounterValueLabel.Brush = new SolidBrush(Settings.OverrideTextColor ? Settings.CounterValueColor : state.LayoutSettings.TextColor);
@@ -164,7 +165,9 @@ namespace LiveSplit.UI.Components
             try
             {
                 if (Settings.Hook != null)
+                {
                     Settings.Hook.Poll();
+                }
             }
             catch { }
 
@@ -213,10 +216,14 @@ namespace LiveSplit.UI.Components
                 || Settings.GlobalHotkeysEnabled)
             {
                 if (e == Settings.IncrementKey)
+                {
                     Counter.Increment();
+                }
 
                 if (e == Settings.DecrementKey)
+                {
                     Counter.Decrement();
+                }
 
                 if (e == Settings.ResetKey)
                 {
